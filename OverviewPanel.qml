@@ -224,10 +224,10 @@ PanelWindow {
                             id: itemLabel
                             anchors.verticalCenter: parent.verticalCenter
                             x: 14
-                            text: active ? ("> " + modelData.name) : modelData.name
+                            text: modelData.name
                             color: active ? Theme.accent : Theme.fg
                             font.pixelSize: Theme.sizeTitle
-                            font.capitalization: active ? Font.AllUppercase : Font.MixedCase
+                            font.underline: active
                         }
 
                         MouseArea {
