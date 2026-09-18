@@ -59,7 +59,7 @@ PanelWindow {
     property var listModel: []
     property int selectedIndex: 0
 
-    readonly property var tabOrder: ["apps", "code", "cmds", "sys", "aoe2"]
+    readonly property var tabOrder: ["apps", "code", "cmds", "sys"].concat(Features.aoe2Panel ? ["aoe2"] : [])
     // Sys y AOE2 tienen su propio contenido: sin buscador ni lista de lanzadores.
     readonly property bool listTab: Bridge.activeTab !== "sys" && Bridge.activeTab !== "aoe2"
 
@@ -129,9 +129,8 @@ PanelWindow {
                         { label: "Apps", active: Bridge.activeTab === "apps", onClicked: () => Bridge.activeTab = "apps" },
                         { label: "Code", active: Bridge.activeTab === "code", onClicked: () => Bridge.activeTab = "code" },
                         { label: "Cmds", active: Bridge.activeTab === "cmds", onClicked: () => Bridge.activeTab = "cmds" },
-                        { label: "Sys",  active: Bridge.activeTab === "sys",  onClicked: () => Bridge.activeTab = "sys" },
-                        { label: "Aoe2", active: Bridge.activeTab === "aoe2", onClicked: () => Bridge.activeTab = "aoe2" }
-                    ]
+                        { label: "Sys",  active: Bridge.activeTab === "sys",  onClicked: () => Bridge.activeTab = "sys" }
+                    ].concat(Features.aoe2Panel ? [{ label: "Aoe2", active: Bridge.activeTab === "aoe2", onClicked: () => Bridge.activeTab = "aoe2" }] : [])
                 }
 
                 TextField {

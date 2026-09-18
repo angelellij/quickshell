@@ -55,12 +55,9 @@ PanelWindow {
             Layout.fillWidth: true
             spacing: 0
             NavItem { text: "[#]"; onClicked: Quickshell.execDetached(["niri", "msg", "action", "toggle-overview"]) }
-            // Kb, F11 (fullscreen) y Prt no se usan en este sistema: hay
-            // teclado fisico con esas teclas reales. Se dejan comentados
-            // para reactivarlos facil en un dispositivo tactil.
-            // NavItem { text: "Kb";  onClicked: Quickshell.execDetached(["pkill", "-SIGRTMIN", "-f", "wvkbd-mobintl-custom"]) }
-            // NavItem { text: "F11"; onClicked: Sh.run("toggle-fullscreen-50.sh") }
-            // NavItem { text: "Prt"; onClicked: Quickshell.execDetached(["niri", "msg", "action", "screenshot"]) }
+            NavItem { text: "Kb";  visible: Features.virtualKeyboard;  onClicked: Quickshell.execDetached(["pkill", "-SIGRTMIN", "-f", "wvkbd-mobintl-custom"]) }
+            NavItem { text: "F11"; visible: Features.fullscreenToggle; onClicked: Sh.run("toggle-fullscreen-50.sh") }
+            NavItem { text: "Prt"; visible: Features.screenshot;       onClicked: Quickshell.execDetached(["niri", "msg", "action", "screenshot"]) }
         }
 
         Separator {}
@@ -72,7 +69,7 @@ PanelWindow {
             NavItem { text: "Fi"; onClicked: Quickshell.execDetached(["nautilus"]) }
             NavItem { text: "Di"; onClicked: Quickshell.execDetached(["discord"]) }
             NavItem { text: "Te"; onClicked: Quickshell.execDetached([Sh.terminalApp]) }
-            NavItem { text: "AOE"; onClicked: Quickshell.execDetached(["steam", "steam://rungameid/813780"]) }
+            NavItem { text: "AOE"; visible: Features.aoe2Launcher; onClicked: Quickshell.execDetached(["steam", "steam://rungameid/813780"]) }
         }
 
         Item { Layout.fillHeight: true }
@@ -88,13 +85,12 @@ PanelWindow {
             StatItem { etiqueta: "MES"; valor: Qt.formatDateTime(root.now, "MM"); onClicked: root.toggleSystem() }
             Separator {}
             StatItem { etiqueta: "CPU"; valor: Stats.cpu; onClicked: root.toggleSystem() }
-            StatItem { etiqueta: "GPU"; valor: Stats.gpu; onClicked: root.toggleSystem() }
+            StatItem { etiqueta: "GPU"; visible: Features.gpu; valor: Stats.gpu; onClicked: root.toggleSystem() }
             StatItem { etiqueta: "RAM"; valor: Stats.ram; onClicked: root.toggleSystem() }
             Separator {}
             StatItem { etiqueta: "VOL"; valor: Stats.volumen; onClicked: root.toggleSystem() }
             StatItem { etiqueta: "MIC"; valor: Stats.micVol; onClicked: root.toggleSystem() }
-            // Sin bateria en este sistema (es un desktop).
-            // StatItem { etiqueta: "BAT"; valor: Stats.bateria }
+            StatItem { etiqueta: "BAT"; visible: Features.battery; valor: Stats.bateria; onClicked: root.toggleSystem() }
         }
     }
 }

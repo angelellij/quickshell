@@ -20,13 +20,14 @@ SysTab {
 
     SectionBox {
         title: "Audio"
-        // Sin control de brillo en este sistema (es un desktop, sin backlight).
-        // SliderRow {
-        //     label: "Brillo"
-        //     min: 1
-        //     valueNum: Stats.brilloNum
-        //     onChanged: (value) => Quickshell.execDetached(["bash", "-c", "brightnessctl set " + Math.round(value) + "% -q"])
-        // }
+        SliderRow {
+            Layout.fillWidth: true
+            visible: Features.brightness
+            label: "Brillo"
+            min: 1
+            valueNum: Stats.brilloNum
+            onChanged: (value) => Quickshell.execDetached(["bash", "-c", "brightnessctl set " + Math.round(value) + "% -q"])
+        }
         SliderRow {
             Layout.fillWidth: true
             label: "Volumen"

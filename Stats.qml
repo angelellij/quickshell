@@ -13,7 +13,7 @@ import Quickshell.Services.Pipewire
 QtObject {
     property FileView statFile: FileView { path: "/proc/stat"; blockLoading: true }
     property FileView memFile: FileView { path: "/proc/meminfo"; blockLoading: true }
-    property FileView gpuFile: FileView { path: "/sys/class/drm/card0/device/gpu_busy_percent"; blockLoading: true }
+    property FileView gpuFile: FileView { path: "/sys/class/drm/card0/device/gpu_busy_percent"; blockLoading: true; printErrors: false }
 
     property string cpu: "0%"
     property string ram: "0%"
@@ -43,11 +43,13 @@ QtObject {
         ram = (t > 0 ? Math.round((t - kb("MemFree") - kb("Buffers") - kb("Cached")) / t * 100) : 0) + "%"
 
         // Sin GPU compatible (o sin permiso), el archivo no existe: queda en 0%.
-        try {
-            gpuFile.reload()
-            gpu = (parseInt(gpuFile.text()) || 0) + "%"
-        } catch (e) {
-            gpu = "0%"
+        if (Features.gpu) {
+            try {
+                gpuFile.reload()
+                gpu = (parseInt(gpuFile.text()) || 0) + "%"
+            } catch (e) {
+                gpu = "0%"
+            }
         }
     }
 
@@ -66,11 +68,8 @@ QtObject {
     readonly property PwNode source: Pipewire.defaultAudioSource
     property PwObjectTracker audioTracker: PwObjectTracker { objects: [Stats.sink, Stats.source] }
 
-    // Sin bateria/brillo en este sistema (es un desktop, sin backlight):
-    // comentados en vez de sacados, junto con los StatItem/SliderRow que ya
-    // estaban comentados en Toolbar.qml/SysHome.qml.
-    // property PollingProcess batProc: PollingProcess { interval: 30000; command: ["bash", "-c", "cat /sys/class/power_supply/BAT0/capacity | awk '{print $1\"%\"}'"] }
-    // property PollingProcess brilloProc: PollingProcess { interval: 2000; command: ["bash", "-c", "brightnessctl -m | cut -d, -f4 | tr -d '%'"] }
+    property PollingProcess batProc: PollingProcess { active: Features.battery; interval: 30000; command: ["bash", "-c", "cat /sys/class/power_supply/BAT0/capacity | awk '{print $1\"%\"}'"] }
+    property PollingProcess brilloProc: PollingProcess { active: Features.brightness; interval: 2000; command: ["bash", "-c", "brightnessctl -m | cut -d, -f4 | tr -d '%'"] }
 
     // Solo lectura: escribir `audio.volume` desde aca no tiene efecto real en
     // este sistema (sink Bluetooth; el volumen va por la ruta del dispositivo),
@@ -84,6 +83,7 @@ QtObject {
     readonly property string volumen: volumenNum + "%"
     readonly property string micVol: micVolNum + "%"
 
-    // readonly property string bateria: batProc.text
-    // readonly property string brillo: ...
+    readonly property string bateria: batProc.text
+    readonly property int brilloNum: parseInt(brilloProc.text) || 0
+    readonly property string brillo: brilloNum + "%"
 }

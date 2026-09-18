@@ -1,0 +1,10 @@
+{
+    "gpu": true,
+    "battery": true,
+    "brightness": true,
+    "virtualKeyboard": true,
+    "fullscreenToggle": true,
+    "screenshot": true,
+    "aoe2Panel": true,
+    "aoe2Launcher": true
+}
